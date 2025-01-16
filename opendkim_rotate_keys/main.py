@@ -1,4 +1,5 @@
 import grp
+import logging
 import os
 import pwd
 import sys
@@ -6,11 +7,26 @@ import sys
 import click
 
 from opendkim_rotate_keys.key_table import *
-from opendkim_rotate_keys.manager import *
+from opendkim_rotate_keys.manager import Manager
 from opendkim_rotate_keys.utils import *
+
+logger = logging.getLogger(__name__)
+
+
+def start_logging():
+    logging.basicConfig(
+        #  filename="opendkim_rotate_keys.log",
+        level=logging.INFO,
+    )
 
 
 @click.command()
+@click.option(
+    "-v",
+    "--verbose",
+    default=False,
+    help="Be verbose",
+)
 @click.option(
     "--opendkim-conf",
     default="/etc/opendkim/opendkim.conf",
@@ -22,30 +38,20 @@ from opendkim_rotate_keys.utils import *
     help="OpenDKIM key store directory",
 )
 @click.option(
-    "--opendkim-genkey",
-    default="/usr/sbin/opendkim-genkey",
-    help="Path to the opendkim-genkey executable",
+    "--dns-provider",
+    default="linode",
+    help="DNS provider",
 )
-def cli(
-    opendkim_conf,
-    opendkim_keys_basedir,
-    opendkim_genkey,
-):
-    print(opendkim_genkey)
+def cli(verbose, opendkim_conf, opendkim_keys_basedir, opendkim_genkey, dns_provider):
+    start_logging()
+    return
+    manager = Manager(
+        verbose=verbose,
+        opendkim_conf=opendkim_conf,
+        opendkim_keys_basedir=opendkim_keys_basedir,
+        dns_provider=dns_provider,
+    )
 
-
-def main(verbose):
-    manager = Manager(verbose)
-    manager.opendkim_conf = "/etc/opendkim.conf"
-    manager.opendkim_keys_basedir = "/etc/dkimkeys"
-    manager.opendkim_genkey = "/usr/bin/opendkim-genkey"
-    manager.opendkim_testkey = "/usr/bin/opendkim-testkey"
-    manager.key_owner = "opendkim"
-    manager.key_owner_uid = pwd.getpwnam(manager.key_owner).pw_uid
-    manager.key_group = "opendkim"
-    manager.key_group_gid = grp.getgrnam(manager.key_group).gr_gid
-
-    manager.dns_provider = create_dns_provider("linode")
     manager.keytable_path = get_keytable_path(manager.opendkim_conf)
 
     manager.keytable = KeyTable(manager.keytable_path)
