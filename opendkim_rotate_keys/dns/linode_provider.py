@@ -1,7 +1,7 @@
 import os
 import requests
 
-from odkim_rotate.dns.provider import *
+from opendkim_rotate_keys.dns.provider import *
 
 class LinodeDnsProvider(DnsProvider):
     """DNS provider for Linode.

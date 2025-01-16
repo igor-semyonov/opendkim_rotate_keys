@@ -2,7 +2,7 @@ from __future__ import print_function
 
 import subprocess
 
-from odkim_rotate.dns.linode_provider import *
+from opendkim_rotate_keys.dns.linode_provider import *
 
 def toggle_services(stop):
     action = 'stop' if stop else 'start'

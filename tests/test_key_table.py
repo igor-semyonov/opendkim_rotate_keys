@@ -3,7 +3,7 @@ import shutil
 import tempfile
 import unittest
 
-from odkim_rotate.key_table import KeyTable
+from opendkim_rotate_keys.key_table import KeyTable
 
 class KeyTableTests(unittest.TestCase):
     def setUp(self):

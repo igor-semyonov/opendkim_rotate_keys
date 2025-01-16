@@ -1,7 +1,7 @@
 import os
 import unittest
 
-from odkim_rotate.utils import *
+from opendkim_rotate_keys.utils import *
 
 class ScrubTxtRecordTests(unittest.TestCase):
     def test_multiline_record(self):
@@ -26,7 +26,7 @@ class ScrubTxtRecordTests(unittest.TestCase):
 
 class CreateDnsProviderTests(unittest.TestCase):
     def test_linode(self):
-        from odkim_rotate.dns import provider,linode_provider
+        from opendkim_rotate_keys.dns import provider,linode_provider
 
         os.environ['LINODE_API_KEY'] = ''
         provider = create_dns_provider('linode')

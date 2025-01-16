@@ -4,8 +4,8 @@ import shutil
 import subprocess
 import tempfile
 
-from odkim_rotate.key_table import *
-from odkim_rotate import utils
+from opendkim_rotate_keys.key_table import *
+from opendkim_rotate_keys import utils
 
 class Manager:
     def __init__(self, verbose):
