@@ -1,7 +1,9 @@
 import os
 import unittest
 
+from opendkim_rotate_keys.dns.providers import *
 from opendkim_rotate_keys.utils import *
+
 
 class ScrubTxtRecordTests(unittest.TestCase):
     def test_multiline_record(self):
@@ -24,15 +26,14 @@ class ScrubTxtRecordTests(unittest.TestCase):
 
         self.assertEqual(expected, actual)
 
+
 class CreateDnsProviderTests(unittest.TestCase):
     def test_linode(self):
-        from opendkim_rotate_keys.dns import provider,linode_provider
 
-        os.environ['LINODE_API_KEY'] = ''
-        provider = create_dns_provider('linode')
+        os.environ["LINODE_API_KEY"] = ""
+        provider = create_dns_provider("linode")
         self.assertIsInstance(provider, LinodeDnsProvider)
 
     def test_unknown(self):
         with self.assertRaises(NameError):
-            provider = create_dns_provider('42')
-
+            provider = create_dns_provider("42")

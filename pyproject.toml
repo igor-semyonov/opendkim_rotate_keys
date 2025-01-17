@@ -1,10 +1,12 @@
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+# requires = ["hatchling"]
+# build-backend = "hatchling.build"
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
 
 [project]
 name = "opendkim_rotate_keys"
-dynamic = ["version"]
+version = "0.0.1"
 authors = [{ name = "Igor Semyonov", email = "igor@semyonov.xyz" }]
 description = "Tool to automate rotation of dkim keys"
 readme = "README.md"
@@ -21,10 +23,16 @@ dependencies = [
 [project.urls]
 "Homepage" = "https://github.com/igor-semyonov/opendkim_rotate_keys"
 
-#[tool.pytest.ini_options]
-#addopts = [
+# [tool.pytest.ini_options]
+# addopts = [
 #    "--import-mode=importlib",
-#]
+# ]
+# pythonpath = [
+#   "./opendkim_rotate_keys/"
+# ]
 
 [project.scripts]
 opendkim-rotate-keys = "opendkim_rotate_keys:main.cli"
+
+[tool.black]
+line-length = 60

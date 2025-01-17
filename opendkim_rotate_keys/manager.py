@@ -6,7 +6,7 @@ import subprocess
 import tempfile
 
 from opendkim_rotate_keys import utils
-from opendkim_rotate_keys.key_table import *
+from opendkim_rotate_keys.key_table import KeyTable
 
 logger = logging.getLogger(__name__)
 

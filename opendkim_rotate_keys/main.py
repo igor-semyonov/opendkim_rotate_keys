@@ -6,9 +6,10 @@ import sys
 
 import click
 
-from opendkim_rotate_keys.key_table import *
+#  from opendkim_rotate_keys.key_table import *
 from opendkim_rotate_keys.manager import Manager
-from opendkim_rotate_keys.utils import *
+
+#  from opendkim_rotate_keys.utils import *
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +43,13 @@ def start_logging():
     default="linode",
     help="DNS provider",
 )
-def cli(verbose, opendkim_conf, opendkim_keys_basedir, opendkim_genkey, dns_provider):
+def cli(
+    verbose,
+    opendkim_conf,
+    opendkim_keys_basedir,
+    opendkim_genkey,
+    dns_provider,
+):
     start_logging()
     return
     manager = Manager(
@@ -52,7 +59,9 @@ def cli(verbose, opendkim_conf, opendkim_keys_basedir, opendkim_genkey, dns_prov
         dns_provider=dns_provider,
     )
 
-    manager.keytable_path = get_keytable_path(manager.opendkim_conf)
+    manager.keytable_path = get_keytable_path(
+        manager.opendkim_conf
+    )
 
     manager.keytable = KeyTable(manager.keytable_path)
 
