@@ -30,8 +30,8 @@ class LinodeDnsProvider(DnsProvider):
     """
 
     api_key = ""
-    api_url = "https://api.linode.com/"
-    domains = {}
+    #  api_url = "https://api.linode.com"
+    api_url = "https://api.linode.com/v4/domains?page=1&page_size=100"
 
     def __init__(self):
         if "LINODE_API_KEY" not in os.environ:
@@ -42,50 +42,82 @@ class LinodeDnsProvider(DnsProvider):
         self.api_key = os.environ.get("LINODE_API_KEY")
         self.domains = {}
 
-    def create_txt_record(self, domain, selector, value):
-        if not self.domains:
-            self.enumerate_domains()
-
+    def create_txt_record(
+        self,
+        domain: str,
+        selector: str,
+        value: str,
+    ):
         if domain not in self.domains:
             raise KeyError(
-                "Domain {} not found in Linode".format(
-                    domain
-                )
+                f"Domain {domain} not found in Linode"
             )
 
-        data = {
-            "api_action": "domain.resource.create",
-            "DomainID": self.domains[domain],
-            "Type": "TXT",
-            "Name": selector + "._domainkey",
-            "Target": value,
+        url = f"https://api.linode.com/v4/domains/{self.domains[domain]}/records"
+
+        headers = {
+            "accept": "application/json",
+            "content-type": "application/json",
+            "authorization": f"Bearer {self.api_key}",
         }
 
-        r = self.send_request(data)
+        payload = {
+            "name": f"{selector}_domainkey",
+            "type": "TXT",
+            "target": value,
+            "ttl_sec": 3600,
+        }
+        response = requests.post(
+            url, json=payload, headers=headers
+        )
 
-    def enumerate_domains(self):
-        """Cache all domains available along with their domain ID."""
+    def get_records(self):
+        url = "https://api.linode.com/v4/domains/{self.domains[domain]}/records"
+        headers = {
+            "accept": "application/json",
+            "authorization": f"Bearer {self.api_key}",
+        }
 
-        data = {"api_action": "domain.list"}
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        return response.json()
 
-        r = self.send_request({"api_action": "domain.list"})
+    def delete_txt_record(
+        self,
+    ):
+        pass
 
-        for domain in r["DATA"]:
-            self.domains[domain["DOMAIN"]] = domain[
-                "DOMAINID"
-            ]
+    def get_domains(self):
+        url = "https://api.linode.com/v4/domains"
+
+        headers = {
+            "accept": "application/json",
+            "authorization": f"Bearer {self.api_key}",
+        }
+
+        response = requests.get(url, headers=headers)
+        #  response.raise_for_status()
+        response = response.json()
+
+        for domain_spec in response["data"]:
+            self.domains[domain_spec["domain"]] = (
+                domain_spec["id"]
+            )
 
         if len(self.domains) == 0:
             raise RuntimeError("No domains found on Linode")
 
     def send_request(self, data):
-        headers = {"User-Agent": "OpenDKIMRotateKeys/1.0.0"}
+        headers = {
+            "User-Agent": "opendkim_rotate_keys/1.0.0"
+        }
 
         data["api_key"] = self.api_key
 
-        r = requests.post(
+        r = requests.get(
             self.api_url, data=data, headers=headers
-        ).json()
+        ).text
+        return r
 
         if len(r["ERRORARRAY"]) > 0:
             messages = []
