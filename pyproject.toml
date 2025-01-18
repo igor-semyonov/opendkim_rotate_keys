@@ -21,6 +21,9 @@ dependencies = [
   "requests",
 ]
 
+[project.optional-dependencies]
+dev = ["pytest"]
+
 [project.urls]
 "Homepage" = "https://github.com/igor-semyonov/opendkim_rotate_keys"
 

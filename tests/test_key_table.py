@@ -2,6 +2,7 @@ import os
 import shutil
 import tempfile
 
+
 from opendkim_rotate_keys.key_table import KeyTable
 
 
@@ -9,7 +10,7 @@ class TestKeyTable:
     def setup_class(self):
         self.key_table_file = tempfile.mkstemp()[1]
 
-    def tearDown(self):
+    def teardown_class(self):
         os.unlink(self.key_table_file)
 
     def write_key_file_contents(self, keyfile):
