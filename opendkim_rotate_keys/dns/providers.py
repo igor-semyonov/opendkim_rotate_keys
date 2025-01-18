@@ -71,8 +71,11 @@ class LinodeDnsProvider(DnsProvider):
             url, json=payload, headers=headers
         )
 
-    def get_records(self):
-        url = "https://api.linode.com/v4/domains/{self.domains[domain]}/records"
+    def get_records(self, domain: str):
+        if domain not in self.domains.keys():
+            raise f"{domain} not in domains {self.domains}"
+
+        url = f"https://api.linode.com/v4/domains/{self.domains[domain]}/records"
         headers = {
             "accept": "application/json",
             "authorization": f"Bearer {self.api_key}",
@@ -84,8 +87,21 @@ class LinodeDnsProvider(DnsProvider):
 
     def delete_txt_record(
         self,
+        domain: str,
+        record_id: int,
     ):
-        pass
+        if domain not in self.domains.keys():
+            raise f"{domain} not in domains {self.domains}"
+
+        url = f"https://api.linode.com/v4/domains/{self.domains[domain]}/records/{record_id}"
+
+        headers = {
+            "accept": "application/json",
+            "authorization": f"Bearer {self.api_key}",
+        }
+
+        response = requests.delete(url, headers=headers)
+        return response.json()
 
     def get_domains(self):
         url = "https://api.linode.com/v4/domains"
