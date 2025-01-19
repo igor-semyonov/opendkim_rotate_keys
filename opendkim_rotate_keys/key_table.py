@@ -105,7 +105,7 @@ class KeyTable:
         )
 
         with open(self.file_path, "w") as f:
-            for short_name in entries:
+            for short_name, entry in entries.items():
                 line_format = (
                     "{:"
                     + str(padding_length)
@@ -114,9 +114,9 @@ class KeyTable:
 
                 entry = line_format.format(
                     short_name,
-                    entries[short_name][self.DOMAIN],
-                    entries[short_name][self.SELECTOR],
-                    entries[short_name][self.PRIVATE_KEY],
+                    entry[self.DOMAIN],
+                    entry[self.SELECTOR],
+                    entry[self.PRIVATE_KEY],
                 )
 
                 f.write(entry)
