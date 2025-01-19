@@ -55,12 +55,6 @@ def cli(
         dns_provider=dns_provider,
     )
 
-    manager.keytable_path = get_keytable_path(
-        manager.opendkim_conf
-    )
-
-    manager.keytable = KeyTable(manager.keytable_path)
-
     manager.rotate_keys()
 
 

@@ -60,6 +60,12 @@ class Manager:
                 "opendkim-genkey or opendkim-testkey were not found on the path"
             )
 
+        self.keytable_path = utils.get_keytable_path(
+            self.opendkim_conf
+        )
+
+        self.keytable = KeyTable(self.keytable_path)
+
     def print_config(self):
         utils.print_verbose(
             "OpenDKIM config: " + self.opendkim_conf
