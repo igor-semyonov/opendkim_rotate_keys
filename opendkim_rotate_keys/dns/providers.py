@@ -48,6 +48,8 @@ class LinodeDnsProvider(DnsProvider):
         selector: str,
         value: str,
     ):
+        if len(self.domains) == 0:
+            self.get_domains()
         if domain not in self.domains:
             raise KeyError(
                 f"Domain {domain} not found in Linode"
