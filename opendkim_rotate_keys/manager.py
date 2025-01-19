@@ -264,11 +264,6 @@ class Manager:
             os.chdir(self.scratch_dir)
             self.generate_keys()
 
-            try:
-                input = raw_input
-            except NameError:
-                pass
-
             print("")
             print("")
             utils.print_header(
