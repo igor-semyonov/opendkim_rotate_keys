@@ -1,7 +1,6 @@
 import grp
 import logging
 import os
-import pwd
 import sys
 
 import click
