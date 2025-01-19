@@ -64,7 +64,7 @@ class LinodeDnsProvider(DnsProvider):
         }
 
         payload = {
-            "name": f"{selector}_domainkey",
+            "name": f"{selector}._domainkey",
             "type": "TXT",
             "target": value,
             "ttl_sec": 3600,
