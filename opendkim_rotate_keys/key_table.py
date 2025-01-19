@@ -46,7 +46,9 @@ class KeyTable:
                 self.original_conf_file[parts[0]] = values
 
         self.entries = dict(sorted(self.entries.items()))
-        self.original_config_file = dict(sorted(self.original_conf_file.items()))
+        self.original_config_file = dict(
+            sorted(self.original_conf_file.items())
+        )
 
         self.file_path = file_path
         self.iter_index = 0
