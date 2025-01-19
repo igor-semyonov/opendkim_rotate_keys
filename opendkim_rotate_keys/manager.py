@@ -146,6 +146,12 @@ class Manager:
                 txt_value,
             )
 
+        subprocess.run([
+            "chmod",
+            "640",
+            f"{self.opendkim_keys_basedir}/*"
+            ])
+
     def test_keys(self):
         utils.print_header("Testing keys...")
         print("")
