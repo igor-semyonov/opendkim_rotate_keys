@@ -50,7 +50,6 @@ def cli(
     dns_provider,
 ):
     start_logging()
-    return
     manager = Manager(
         verbose=verbose,
         opendkim_conf=opendkim_conf,
