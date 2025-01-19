@@ -75,7 +75,9 @@ def scrub_txt_record(txt_value):
     return txt
 
 
-def create_dns_provider(dns_provider):
+def create_dns_provider(
+    dns_provider,
+) -> DnsProvider | LinodeDnsProvider:
     """Factory method to generate a DNS provider to create entries at."""
 
     if dns_provider == "linode":
