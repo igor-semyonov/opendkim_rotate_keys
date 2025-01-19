@@ -47,7 +47,6 @@ def cli(
     verbose,
     opendkim_conf,
     opendkim_keys_basedir,
-    opendkim_genkey,
     dns_provider,
 ):
     start_logging()
