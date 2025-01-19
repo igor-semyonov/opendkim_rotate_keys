@@ -28,7 +28,7 @@ def toggle_services(
     action = "stop" if stop else "start"
     if init_system == "openrc":
         postfix_options = ["rc-service", "postfix", action]
-        opendkim_options = ["systemctl", "opendkim", action]
+        opendkim_options = ["rc-service", "opendkim", action]
     elif init_system == "systemd":
         postfix_options = ["systemctl", action, "postfix"]
         opendkim_options = ["systemctl", action, "opendkim"]
