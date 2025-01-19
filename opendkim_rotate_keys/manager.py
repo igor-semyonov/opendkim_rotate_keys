@@ -37,7 +37,7 @@ class Manager:
             "%Y%m%d%f"
         )
 
-        self.key_owner = "opendkim"
+        self.key_owner = "root"
         self.key_owner_uid = pwd.getpwnam(
             self.key_owner
         ).pw_uid
