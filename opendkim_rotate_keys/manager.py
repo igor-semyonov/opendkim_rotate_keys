@@ -28,10 +28,14 @@ class Manager:
         self.scratch_dir = tempfile.mkdtemp()
         self.starting_dir = os.getcwd()
 
-        self.dns_provider = utils.create_dns_provider(dns_provider)
+        self.dns_provider = utils.create_dns_provider(
+            dns_provider
+        )
 
         # Today's date with microseconds for "randomization."
-        self.selector = datetime.datetime.now().strftime("%Y%m%d%f")
+        self.selector = datetime.datetime.now().strftime(
+            "%Y%m%d%f"
+        )
 
         self.key_owner = "opendkim"
         self.key_owner_uid = pwd.getpwnam(
@@ -42,31 +46,54 @@ class Manager:
             self.key_group
         ).gr_gid
 
-        self.opendkim_genkey = shutil.which("opendkim-genkey")
-        self.opendkim_testkey = shutil.which("opendkim-testkey")
-        if self.opendkim_genkey is None or self.opendkim_testkey is None:
+        self.opendkim_genkey = shutil.which(
+            "opendkim-genkey"
+        )
+        self.opendkim_testkey = shutil.which(
+            "opendkim-testkey"
+        )
+        if (
+            self.opendkim_genkey is None
+            or self.opendkim_testkey is None
+        ):
             logger.error(
                 "opendkim-genkey or opendkim-testkey were not found on the path"
             )
 
     def print_config(self):
-        utils.print_verbose("OpenDKIM config: " + self.opendkim_conf)
         utils.print_verbose(
-            "OpenDKIM KeyTable directory: " + self.opendkim_keys_basedir
+            "OpenDKIM config: " + self.opendkim_conf
         )
-        utils.print_verbose("OpenDKIM generate key: " + self.opendkim_genkey)
-        utils.print_verbose("OpenDKIM test key: " + self.opendkim_genkey)
+        utils.print_verbose(
+            "OpenDKIM KeyTable directory: "
+            + self.opendkim_keys_basedir
+        )
+        utils.print_verbose(
+            "OpenDKIM generate key: " + self.opendkim_genkey
+        )
+        utils.print_verbose(
+            "OpenDKIM test key: " + self.opendkim_genkey
+        )
         utils.print_verbose(
             "Private keys ownership: {}:{} ({}:{})".format(
-                self.key_owner, self.key_group, self.key_owner_uid, self.key_group_gid
+                self.key_owner,
+                self.key_group,
+                self.key_owner_uid,
+                self.key_group_gid,
             )
         )
-        utils.print_verbose("OpenDKIM KeyTable file: " + self.keytable_path)
-        utils.print_verbose("Using scratch directory " + self.scratch_dir)
+        utils.print_verbose(
+            "OpenDKIM KeyTable file: " + self.keytable_path
+        )
+        utils.print_verbose(
+            "Using scratch directory " + self.scratch_dir
+        )
 
     def generate_keys(self):
         for short_name, values in self.keytable:
-            utils.print_header("Processing " + values[KeyTable.DOMAIN])
+            utils.print_header(
+                "Processing " + values[KeyTable.DOMAIN]
+            )
 
             print("Generating key...")
 
@@ -87,10 +114,17 @@ class Manager:
             if self.verbose:
                 print("\x1b[0m")
 
-            os.rename(self.selector + ".private", short_name + ".private")
-            os.rename(self.selector + ".txt", short_name + ".txt")
+            os.rename(
+                self.selector + ".private",
+                short_name + ".private",
+            )
+            os.rename(
+                self.selector + ".txt", short_name + ".txt"
+            )
 
-            self.keytable.update_selector(short_name, self.selector)
+            self.keytable.update_selector(
+                short_name, self.selector
+            )
 
             print("Adding DNS TXT record...")
 
@@ -101,7 +135,9 @@ class Manager:
                 utils.print_verbose(txt_value)
 
             self.dns_provider.create_txt_record(
-                values[KeyTable.DOMAIN], self.selector, txt_value
+                values[KeyTable.DOMAIN],
+                self.selector,
+                txt_value,
             )
 
     def test_keys(self):
@@ -109,7 +145,11 @@ class Manager:
         print("")
 
         for short_name, values in self.keytable:
-            utils.print_header("Testing {}...".format(values[KeyTable.DOMAIN]))
+            utils.print_header(
+                "Testing {}...".format(
+                    values[KeyTable.DOMAIN]
+                )
+            )
 
             options = [
                 self.opendkim_testkey,
@@ -151,28 +191,40 @@ class Manager:
 
         try:
             for short_name, values in self.keytable:
-                utils.print_header("Installing {}...".format(values[KeyTable.DOMAIN]))
+                utils.print_header(
+                    "Installing {}...".format(
+                        values[KeyTable.DOMAIN]
+                    )
+                )
 
                 local_key = short_name + ".private"
 
                 if self.verbose:
                     utils.print_verbose(
                         "Moving {} to {}".format(
-                            local_key, values[KeyTable.PRIVATE_KEY]
+                            local_key,
+                            values[KeyTable.PRIVATE_KEY],
                         )
                     )
 
-                os.rename(local_key, values[KeyTable.PRIVATE_KEY])
+                os.rename(
+                    local_key, values[KeyTable.PRIVATE_KEY]
+                )
                 os.chown(
-                    values[KeyTable.PRIVATE_KEY], self.key_owner_uid, self.key_group_gid
+                    values[KeyTable.PRIVATE_KEY],
+                    self.key_owner_uid,
+                    self.key_group_gid,
                 )
 
             try:
-                utils.print_header("Saving new selector to KeyTable file...")
+                utils.print_header(
+                    "Saving new selector to KeyTable file..."
+                )
                 self.keytable.save_changes()
             except Exception as e:
                 utils.print_error(
-                    "Error: Unable to save new selector to KeyTable file: " + str(e)
+                    "Error: Unable to save new selector to KeyTable file: "
+                    + str(e)
                 )
 
                 try:
@@ -183,7 +235,9 @@ class Manager:
                         + str(ex)
                     )
         except Exception as e:
-            utils.print_error("Error: Unable to install key: " + str(e))
+            utils.print_error(
+                "Error: Unable to install key: " + str(e)
+            )
         finally:
             print("")
             utils.toggle_services(False)
@@ -192,7 +246,11 @@ class Manager:
         if self.verbose:
             self.print_config()
 
-        print("Processing {:,} domains...".format(len(self.keytable)))
+        print(
+            "Processing {:,} domains...".format(
+                len(self.keytable)
+            )
+        )
         print("Using selector " + self.selector)
         print("")
 
@@ -207,11 +265,17 @@ class Manager:
 
             print("")
             print("")
-            utils.print_header("Wait for DNS changes to propagate before continuing.")
             utils.print_header(
-                "The time is now {}".format(datetime.datetime.now().strftime("%c"))
+                "Wait for DNS changes to propagate before continuing."
             )
-            input("Press any key to continue with checking DNS and installing keys...")
+            utils.print_header(
+                "The time is now {}".format(
+                    datetime.datetime.now().strftime("%c")
+                )
+            )
+            input(
+                "Press any key to continue with checking DNS and installing keys..."
+            )
             print("")
             print("")
 
