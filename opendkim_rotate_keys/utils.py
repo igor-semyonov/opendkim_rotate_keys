@@ -21,10 +21,19 @@ __all__ = [
 ]
 
 
-def toggle_services(stop):
+def toggle_services(
+    stop: bool,
+    init_system: str = "openrc",
+):
     action = "stop" if stop else "start"
-    postfix_options = ["systemctl", action, "postfix"]
-    opendkim_options = ["systemctl", action, "opendkim"]
+    if init_system == "openrc":
+        postfix_options = ["rc-service", "postfix", action]
+        opendkim_options = ["systemctl", "opendkim", action]
+    elif init_system == "systemd":
+        postfix_options = ["systemctl", action, "postfix"]
+        opendkim_options = ["systemctl", action, "opendkim"]
+    else:
+        raise f"Init system {init_system} is not supported."
 
     if stop:
         print_header("Stopping services...")
