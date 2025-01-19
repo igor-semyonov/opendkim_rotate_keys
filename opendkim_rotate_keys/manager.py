@@ -1,4 +1,5 @@
 import datetime
+import grp
 import logging
 import os
 import pwd
@@ -33,9 +34,13 @@ class Manager:
         self.selector = datetime.datetime.now().strftime("%Y%m%d%f")
 
         self.key_owner = "opendkim"
-        self.key_owner_uid = pwd.getpwnam(manager.key_owner).pw_uid
+        self.key_owner_uid = pwd.getpwnam(
+            self.key_owner
+        ).pw_uid
         self.key_group = "opendkim"
-        self.key_group_gid = grp.getgrnam(manager.key_group).gr_gid
+        self.key_group_gid = grp.getgrnam(
+            self.key_group
+        ).gr_gid
 
         self.opendkim_genkey = shutil.which("opendkim-genkey")
         self.opendkim_testkey = shutil.which("opendkim-testkey")
