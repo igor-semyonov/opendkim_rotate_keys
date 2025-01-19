@@ -24,6 +24,7 @@ def start_logging():
     "-v",
     "--verbose",
     default=False,
+    is_flag=True,
     help="Be verbose",
 )
 @click.option(
