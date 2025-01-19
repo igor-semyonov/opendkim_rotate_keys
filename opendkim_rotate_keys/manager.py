@@ -26,7 +26,7 @@ class Manager:
         self.scratch_dir = tempfile.mkdtemp()
         self.starting_dir = os.getcwd()
 
-        self.dns_provider = create_dns_provider(dns_provider)
+        self.dns_provider = utils.create_dns_provider(dns_provider)
 
         # Today's date with microseconds for "randomization."
         self.selector = datetime.datetime.now().strftime("%Y%m%d%f")
