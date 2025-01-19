@@ -37,7 +37,7 @@ class Manager:
             "%Y%m%d%f"
         )
 
-        self.key_owner = "opendkim"
+        self.key_owner = "root"
         self.key_owner_uid = pwd.getpwnam(
             self.key_owner
         ).pw_uid
@@ -149,7 +149,12 @@ class Manager:
         subprocess.run([
             "chmod",
             "640",
-            f"{self.opendkim_keys_basedir}/*"
+            f"{self.opendkim_keys_basedir}/*.private"
+            ])
+        subprocess.run([
+            "chown",
+            f"{self.key_owner}:{self.key_group}",
+            f"{self.opendkim_keys_basedir}/*.private"
             ])
 
     def test_keys(self):
