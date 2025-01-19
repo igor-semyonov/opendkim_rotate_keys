@@ -3,7 +3,10 @@ from __future__ import print_function
 import logging
 import subprocess
 
-from opendkim_rotate_keys.dns.providers import *
+from opendkim_rotate_keys.dns.providers import (
+    DnsProvider,
+    LinodeDnsProvider,
+)
 
 logger = logging.getLogger(__name__)
 
