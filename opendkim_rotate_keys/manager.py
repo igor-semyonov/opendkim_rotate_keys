@@ -147,13 +147,13 @@ class Manager:
             )
 
         subprocess.run([
-            "chmod",
-            "640",
+            "chown",
+            f"{self.key_owner}:{self.key_group}",
             f"{self.opendkim_keys_basedir}/*.private"
             ])
         subprocess.run([
-            "chown",
-            f"{self.key_owner}:{self.key_group}",
+            "chmod",
+            "0640",
             f"{self.opendkim_keys_basedir}/*.private"
             ])
 
