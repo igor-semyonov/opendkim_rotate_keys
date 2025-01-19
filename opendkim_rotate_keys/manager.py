@@ -99,7 +99,7 @@ class Manager:
 
             options = [
                 self.opendkim_genkey,
-                "--bits=2048",  #'--hash-algorithms=rsa-sha256', \
+                "--bits=2048",  # '--hash-algorithms=rsa-sha256', \
                 "--restrict",
                 "--selector=" + self.selector,
                 "--domain=" + values[KeyTable.DOMAIN],
