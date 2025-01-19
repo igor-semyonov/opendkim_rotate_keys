@@ -246,22 +246,22 @@ class Manager:
             )
         finally:
             print("")
+            subprocess.run(
+                [
+                    "chown",
+                    f"{self.key_owner}:{self.key_group}",
+                    f"{self.opendkim_keys_basedir}/*.private",
+                ]
+            )
+            subprocess.run(
+                [
+                    "chmod",
+                    "0640",
+                    f"{self.opendkim_keys_basedir}/*.private",
+                ],
+                shell=True,
+            )
             utils.toggle_services(False)
-
-        subprocess.run(
-            [
-                "chown",
-                f"{self.key_owner}:{self.key_group}",
-                f"{self.opendkim_keys_basedir}/*.private",
-            ]
-        )
-        subprocess.run(
-            [
-                "chmod",
-                "0640",
-                f"{self.opendkim_keys_basedir}/*.private",
-            ]
-        )
 
     def rotate_keys(self):
         if self.verbose:
