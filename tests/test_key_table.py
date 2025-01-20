@@ -2,8 +2,29 @@ import os
 import shutil
 import tempfile
 
-
 from opendkim_rotate_keys.key_table import KeyTable
+
+
+def test_how_it_works():
+    import tempfile
+
+    # Create a temporary file with contents
+    with tempfile.NamedTemporaryFile(
+        mode="w+t", delete=False
+    ) as temp_file:
+        temp_file.write(
+                """\
+dkim._domainkey.nalgor.net       nalgor.net:20250119595981:/var/lib/opendkim/nalgor.net.private
+
+dkim._domainkey.semyonov.xyz     semyonov.xyz:20250119595981:/var/lib/opendkim/semyonov.xyz.private
+
+                """
+        )
+        temp_file_name = temp_file.name
+
+    key_table = KeyTable(temp_file_name)
+    print(key_table.entries)
+
 
 
 class TestKeyTable:
