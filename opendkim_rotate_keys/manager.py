@@ -222,6 +222,10 @@ class Manager:
                     self.key_owner_uid,
                     self.key_group_gid,
                 )
+                os.chmod(
+                    values[KeyTable.PRIVATE_KEY],
+                    0o0640,
+                )
 
             try:
                 utils.print_header(
@@ -247,8 +251,6 @@ class Manager:
             )
         finally:
             print("")
-            for file in Path(f"{self.opendkim_keys_basedir}").glob("*.private"):
-                os.chmod(file, 0o0640)
             utils.toggle_services(False)
 
     def rotate_keys(self):
