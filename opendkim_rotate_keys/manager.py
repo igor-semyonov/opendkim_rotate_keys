@@ -1,4 +1,5 @@
 import datetime
+from pathlib import Path
 import grp
 import logging
 import os
@@ -246,26 +247,8 @@ class Manager:
             )
         finally:
             print("")
-            sp_run_chown = subprocess.run(
-                [
-                    "chown",
-                    f"{self.key_owner}:{self.key_group}",
-                    f"{self.opendkim_keys_basedir}/*.private",
-                ],
-                shell=True,
-            )
-            sp_run_chmod = subprocess.run(
-                [
-                    "chmod",
-                    "0640",
-                    f"{self.opendkim_keys_basedir}/*.private",
-                ],
-                shell=True,
-            )
-            print(
-                sp_run_chown,
-                sp_run_chmod,
-            )
+            for file in Path(f"{self.opendkim_keys_basedir}").glob("*.private"):
+                os.chmod(file, 0o0640)
             utils.toggle_services(False)
 
     def rotate_keys(self):
