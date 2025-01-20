@@ -1,5 +1,6 @@
 import logging
 import os
+from datetime import datetime, timedelta
 
 import requests
 
@@ -73,7 +74,7 @@ class LinodeDnsProvider(DnsProvider):
             url, json=payload, headers=headers
         )
 
-    def get_records(self, domain: str):
+    def get_records(self, domain: str) -> dict:
         if domain not in self.domains.keys():
             raise f"{domain} not in domains {self.domains}"
 
@@ -87,7 +88,23 @@ class LinodeDnsProvider(DnsProvider):
         response.raise_for_status()
         return response.json()
 
-    def delete_txt_record(
+    def delete_records_older_than(self, days: int):
+        for domain in self.domains:
+            for record in self.get_records(domain)["data"]:
+                created = datetime.strptime(
+                    record["created"],
+                    "%Y-%m-%dT%H:%M:%S",
+                )
+                if record["type"] != "TXT":
+                    continue
+                if "._domainkey" not in record["name"]:
+                    continue
+                if created < datetime.now() - timedelta(
+                    days=days
+                ):
+                    self.delete_record(domain, record["id"])
+
+    def delete_record(
         self,
         domain: str,
         record_id: int,

@@ -1,5 +1,4 @@
 import datetime
-from pathlib import Path
 import grp
 import logging
 import os
@@ -21,10 +20,12 @@ class Manager:
         opendkim_conf: str = "/etc/opendkim/opendkim.conf",
         opendkim_keys_basedir: str = "/var/lib/opendkim",
         dns_provider: str = "linode",
+        delete_older_than: int = 30_000,
     ):
         self.verbose = verbose
         self.opendkim_conf = opendkim_conf
         self.opendkim_keys_basedir = opendkim_keys_basedir
+        self.delete_older_than = delete_older_than
 
         self.scratch_dir = tempfile.mkdtemp()
         self.starting_dir = os.getcwd()
@@ -252,6 +253,10 @@ class Manager:
         finally:
             print("")
             utils.toggle_services(False)
+
+            self.dns_provider.delete_records_older_than(
+                self.delete_older_than
+            )
 
     def rotate_keys(self):
         if self.verbose:

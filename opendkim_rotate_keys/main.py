@@ -42,11 +42,18 @@ def start_logging():
     default="linode",
     help="DNS provider",
 )
+@click.option(
+    "-D",
+    "--delete-older-than",
+    default=30_000,
+    help="Delete TXT DKIM domainkey records older than this many days old. Defaults to 30,000",
+)
 def cli(
-    verbose,
-    opendkim_conf,
-    opendkim_keys_basedir,
-    dns_provider,
+    verbose: bool,
+    opendkim_conf: str,
+    opendkim_keys_basedir: str,
+    dns_provider: str,
+    delete_older_than: int,
 ):
     start_logging()
     manager = Manager(
@@ -54,6 +61,7 @@ def cli(
         opendkim_conf=opendkim_conf,
         opendkim_keys_basedir=opendkim_keys_basedir,
         dns_provider=dns_provider,
+        delete_older_than=delete_older_than,
     )
 
     manager.rotate_keys()
