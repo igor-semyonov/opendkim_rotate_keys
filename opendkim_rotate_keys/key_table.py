@@ -35,7 +35,10 @@ class KeyTable:
         with open(file_path, "r") as f:
             for line in f:
                 parts = line.split()
-                v = parts[1].split(":")
+                try:
+                    v = parts[1].split(":")
+                except IndexError:
+                    continue
                 values = {
                     self.DOMAIN: v[0],
                     self.SELECTOR: v[1],
