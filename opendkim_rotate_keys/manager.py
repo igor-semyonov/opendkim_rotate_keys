@@ -252,7 +252,7 @@ class Manager:
                     f"{self.key_owner}:{self.key_group}",
                     f"{self.opendkim_keys_basedir}/*.private",
                 ],
-                shell == True,
+                shell=True,
             )
             sp_run_chmod = subprocess.run(
                 [
