@@ -246,20 +246,25 @@ class Manager:
             )
         finally:
             print("")
-            subprocess.run(
+            sp_run_chown = subprocess.run(
                 [
                     "chown",
                     f"{self.key_owner}:{self.key_group}",
                     f"{self.opendkim_keys_basedir}/*.private",
-                ]
+                ],
+                shell == True,
             )
-            subprocess.run(
+            sp_run_chmod = subprocess.run(
                 [
                     "chmod",
                     "0640",
                     f"{self.opendkim_keys_basedir}/*.private",
                 ],
                 shell=True,
+            )
+            print(
+                sp_run_chown,
+                sp_run_chmod,
             )
             utils.toggle_services(False)
 
